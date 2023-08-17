@@ -229,6 +229,7 @@ class WordEmbedding(AbstractWordEmbedding):
         Returns:
             neighbours (list[int]): List of indices of the nearest neighbours
         """
+        print('inside nearest neighbours in word embeddings class')
         if isinstance(index, str):
             index = self._word2index[index]
         if self.nn_matrix is not None:
@@ -237,10 +238,12 @@ class WordEmbedding(AbstractWordEmbedding):
             try:
                 nn = self._nn_cache[index]
             except KeyError:
+                print('after except 240')
                 embedding = torch.tensor(self.embedding_matrix).to(utils.device)
                 vector = torch.tensor(self.embedding_matrix[index]).to(utils.device)
                 dist = torch.norm(embedding - vector, dim=1, p=None)
                 # Since closest neighbour will be the same word, we consider N+1 nearest neighbours
+                print('dist : ', dist)
                 nn = dist.topk(topn + 1, largest=False)[1:].tolist()
                 self._nn_cache[index] = nn
 
