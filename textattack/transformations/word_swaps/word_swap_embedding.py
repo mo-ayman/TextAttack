@@ -38,6 +38,7 @@ class WordSwapEmbedding(WordSwap):
                 "`embedding` object must be of type `textattack.shared.AbstractWordEmbedding`."
             )
         self.embedding = embedding
+        print('after embedding', embedding)
 
     def _get_replacement_words(self, word):
         """Returns a list of possible 'candidate words' to replace a word in a
@@ -45,10 +46,12 @@ class WordSwapEmbedding(WordSwap):
 
         Based on nearest neighbors selected word embeddings.
         """
+        print('__get_replacement_words')
         try:
             word_id = self.embedding.word2index(word.lower())
             nnids = self.embedding.nearest_neighbours(word_id, self.max_candidates)
             candidate_words = []
+            print('candidate words ', candidate_words)
             for i, nbr_id in enumerate(nnids):
                 nbr_word = self.embedding.index2word(nbr_id)
                 candidate_words.append(recover_word_case(nbr_word, word))
