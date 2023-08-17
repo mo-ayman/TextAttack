@@ -244,10 +244,10 @@ class WordEmbedding(AbstractWordEmbedding):
                 dist = torch.norm(embedding - vector, dim=1, p=None)
                 # Since closest neighbour will be the same word, we consider N+1 nearest neighbours
                 print('dist : ', dist)
-                nn = dist.topk(topn + 1, largest=False)[1:].tolist()
-                self._nn_cache[index] = nn
+                nn = dist.topk(topn + 1, largest=False)[1]  # Access the indices tensor
+            self._nn_cache[index] = nn
 
-        return nn
+        return nn.tolist()
 
     @staticmethod
     def counterfitted_GLOVE_embedding():
