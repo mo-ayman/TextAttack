@@ -28,8 +28,11 @@ class UntargetedClassification(ClassificationGoalFunction):
         elif (model_output.numel() == 1) and isinstance(
             self.ground_truth_output, float
         ):
+            print('################inside elif###############')
+            print('self.ground_truth_output - model_output.item()', self.ground_truth_output, model_output.item())
             return abs(self.ground_truth_output - model_output.item()) >= 0.5
         else:
+            print('model_output.argmax() != self.ground_truth_output', model_output.argmax(), self.ground_truth_output)
             return model_output.argmax() != self.ground_truth_output
 
     def _get_score(self, model_output, _):
