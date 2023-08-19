@@ -98,7 +98,7 @@ class GeneticAlgorithm(PopulationBasedSearch, ABC):
                 original_text=original_result.attacked_text,
                 indices_to_modify=[idx],
             )
-            print('after transformation transformed_texts, transformed_texts)
+            print('after transformation transformed_texts', transformed_texts)
             if not len(transformed_texts):
                 iterations += 1
                 continue
