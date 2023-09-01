@@ -140,6 +140,7 @@ class Attacker:
                 )
 
         if not self.attack_args.silent:
+            print(self.attack, "\n")
 
         pbar = tqdm.tqdm(total=num_remaining_attacks, smoothing=0, dynamic_ncols=True)
         if self._checkpoint:
