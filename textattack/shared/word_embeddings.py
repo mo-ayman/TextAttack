@@ -221,7 +221,7 @@ class WordEmbedding(AbstractWordEmbedding):
         return cos_sim
 
     def nearest_neighbours(self, index, topn):
-        print('############## I'm inside nearest neighbours ################')
+        print('############## Im inside nearest neighbours ################')
         """
         Get top-N nearest neighbours for a word
         Args:
