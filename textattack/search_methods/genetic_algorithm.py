@@ -61,7 +61,7 @@ class GeneticAlgorithm(PopulationBasedSearch, ABC):
         raise NotImplementedError
 
     def _perturb(self, pop_member, original_result, index=None):
-        print('======================================inside _perturb of genetic algorithm===========================================')
+      #  print('======================================inside _perturb of genetic algorithm===========================================')
         """Perturb `pop_member` and return it. Replaces a word at a random
         (unless `index` is specified) in `pop_member`.
 
@@ -73,14 +73,14 @@ class GeneticAlgorithm(PopulationBasedSearch, ABC):
             Perturbed `PopulationMember`
         """
         num_words = pop_member.attacked_text.num_words
-        print('num_words ', num_words)
+      #  print('num_words ', num_words)
         # `word_select_prob_weights` is a list of values used for sampling one word to transform
         word_select_prob_weights = np.copy(
             self._get_word_select_prob_weights(pop_member)
         )
-        print('word_select_prob_weights' , word_select_prob_weights)
+      #  print('word_select_prob_weights' , word_select_prob_weights)
         non_zero_indices = np.count_nonzero(word_select_prob_weights)
-        print('non_zero_indices', non_zero_indices)
+       # print('non_zero_indices', non_zero_indices)
         if non_zero_indices == 0:
             return pop_member
         iterations = 0
@@ -92,19 +92,19 @@ class GeneticAlgorithm(PopulationBasedSearch, ABC):
                     word_select_prob_weights
                 )
                 idx = np.random.choice(num_words, 1, p=w_select_probs)[0]
-            print('before transformation pop_member.attacked_text', pop_member.attacked_text)
+        #    print('before transformation pop_member.attacked_text', pop_member.attacked_text)
             transformed_texts = self.get_transformations(
                 pop_member.attacked_text,
                 original_text=original_result.attacked_text,
                 indices_to_modify=[idx],
             )
-            print('after transformation transformed_texts', transformed_texts)
+         #   print('after transformation transformed_texts', transformed_texts)
             if not len(transformed_texts):
                 iterations += 1
                 continue
 
             new_results, self._search_over = self.get_goal_results(transformed_texts)
-            print('new_results, self._search_over', new_results, self._search_over)
+       #     print('new_results, self._search_over', new_results, self._search_over)
             diff_scores = (
                 torch.Tensor([r.score for r in new_results]) - pop_member.result.score
             )
