@@ -57,6 +57,7 @@ class WordEmbeddingDistance(Constraint):
         return self.embedding.get_mse_dist(a, b)
 
     def _check_constraint(self, transformed_text, reference_text):
+        print('inside _check_constraint ---------------------------------------')
         """Returns true if (``transformed_text`` and ``reference_text``) are
         closer than ``self.min_cos_sim`` or ``self.max_mse_dist``."""
         try:
