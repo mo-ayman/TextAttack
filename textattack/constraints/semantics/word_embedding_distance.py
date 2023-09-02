@@ -54,6 +54,8 @@ class WordEmbeddingDistance(Constraint):
 
     def get_mse_dist(self, a, b):
         """Returns the MSE distance of words with IDs a and b."""
+        print('a : ', a)
+        print('b : ', b)
         return self.embedding.get_mse_dist(a, b)
 
     def _check_constraint(self, transformed_text, reference_text):
