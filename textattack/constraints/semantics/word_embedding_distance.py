@@ -54,8 +54,7 @@ class WordEmbeddingDistance(Constraint):
 
     def get_mse_dist(self, a, b):
         """Returns the MSE distance of words with IDs a and b."""
-        print('a : ', a)
-        print('b : ', b)
+
         return self.embedding.get_mse_dist(a, b)
 
     def _check_constraint(self, transformed_text, reference_text):
@@ -84,7 +83,8 @@ class WordEmbeddingDistance(Constraint):
                 # If embedding vocabulary is all lowercase, lowercase words.
                 ref_word = ref_word.lower()
                 transformed_word = transformed_word.lower()
-
+                print('ref_word ', ref_word)
+                print('transformed_word ', transformed_word)
             try:
                 ref_id = self.embedding.word2index(ref_word)
                 transformed_id = self.embedding.word2index(transformed_word)
