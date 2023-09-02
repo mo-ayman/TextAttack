@@ -186,8 +186,8 @@ class WordEmbedding(AbstractWordEmbedding):
         except KeyError:
             e1 = self.embedding_matrix[a]
             e2 = self.embedding_matrix[b]
-            print('e1 : ', e1)
-            print('e2 : ', e2)
+        #    print('e1 : ', e1)
+         #   print('e2 : ', e2)
             e1 = torch.tensor(e1).to(utils.device)
             e2 = torch.tensor(e2).to(utils.device)
             mse_dist = torch.sum((e1 - e2) ** 2).item()
