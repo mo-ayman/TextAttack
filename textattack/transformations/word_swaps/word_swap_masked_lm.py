@@ -297,11 +297,14 @@ class WordSwapMaskedLM(WordSwap):
                         and re.search("[\u0600-\u06FF]", word)
                         and len(utils.words_from_text(word)) == 1
                     ):
-                        mse_dist = self.word_embedding_distance.get_mse_dist(word_at_index, word)
-                        if mse_dist <= self.word_embedding_distance.max_mse_dist:
-                            transformed_text = current_text.replace_word_at_index(index_to_modify, word)
-                            transformed_texts.append((transformed_text, mse_dist))
-                            min_distances.append(mse_dist)
+                        try:
+                            mse_dist = self.word_embedding_distance.get_mse_dist(word_at_index, word)
+                            if mse_dist <= self.word_embedding_distance.max_mse_dist:
+                                transformed_text = current_text.replace_word_at_index(index_to_modify, word)
+                                transformed_texts.append((transformed_text, mse_dist))
+                                min_distances.append(mse_dist)
+                        except:
+                            print('no')
             
             # Find the two minimum distances and their corresponding transformed texts
             min_distances_sorted = sorted(range(len(min_distances)), key=lambda i: min_distances[i])
