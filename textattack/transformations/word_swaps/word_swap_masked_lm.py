@@ -281,12 +281,12 @@ class WordSwapMaskedLM(WordSwap):
                         )
 
             return transformed_texts
-
         elif self.method == "bae":
             replacement_words = self._bae_replacement_words(
                 current_text, indices_to_modify
             )
             transformed_texts = []
+            min_distances = []  # Initialize a list to store the minimum distances
             for i in range(len(replacement_words)):
                 index_to_modify = indices_to_modify[i]
                 word_at_index = current_text.words[index_to_modify]
@@ -297,13 +297,44 @@ class WordSwapMaskedLM(WordSwap):
                         and re.search("[\u0600-\u06FF]", word)
                         and len(utils.words_from_text(word)) == 1
                     ):
-                        if self.word_embedding_distance.get_mse_dist(word_at_index, word) <= self.word_embedding_distance.max_mse_dist:
-                            transformed_texts.append(
-                                current_text.replace_word_at_index(index_to_modify, word)
-                            )
-            return transformed_texts
+                        mse_dist = self.word_embedding_distance.get_mse_dist(word_at_index, word)
+                        if mse_dist <= self.word_embedding_distance.max_mse_dist:
+                            transformed_text = current_text.replace_word_at_index(index_to_modify, word)
+                            transformed_texts.append((transformed_text, mse_dist))
+                            min_distances.append(mse_dist)
+            
+            # Find the two minimum distances and their corresponding transformed texts
+            min_distances_sorted = sorted(range(len(min_distances)), key=lambda i: min_distances[i])
+            min_distances_sorted = min_distances_sorted[:2]  # Get the indices of the two minimum distances
+            
+            # Create a list of transformed texts for the two minimum distances
+            min_transformed_texts = [transformed_texts[i][0] for i in min_distances_sorted]
+            
+            return min_transformed_texts
         else:
             raise ValueError(f"Unrecognized value {self.method} for `self.method`.")
+        # elif self.method == "bae":
+        #     replacement_words = self._bae_replacement_words(
+        #         current_text, indices_to_modify
+        #     )
+        #     transformed_texts = []
+        #     for i in range(len(replacement_words)):
+        #         index_to_modify = indices_to_modify[i]
+        #         word_at_index = current_text.words[index_to_modify]
+        #         for word in replacement_words[i]:
+        #             word = word.strip("Ġ")
+        #             if (
+        #                 word != word_at_index
+        #                 and re.search("[\u0600-\u06FF]", word)
+        #                 and len(utils.words_from_text(word)) == 1
+        #             ):
+        #                 if self.word_embedding_distance.get_mse_dist(word_at_index, word) <= self.word_embedding_distance.max_mse_dist:
+        #                     transformed_texts.append(
+        #                         current_text.replace_word_at_index(index_to_modify, word)
+        #                     )
+        #     return transformed_texts
+        # else:
+        #     raise ValueError(f"Unrecognized value {self.method} for `self.method`.")
 
     def extra_repr_keys(self):
         return [
