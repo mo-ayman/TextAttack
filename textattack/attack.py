@@ -380,6 +380,9 @@ class Attack:
         )
         # Sort transformations to ensure order is preserved between runs
         filtered_texts.sort(key=lambda t: t.text)
+        print('filtered_texts')
+        for text in filtered_texts:
+            print(text)
         return filtered_texts
 
     def _attack(self, initial_result):
