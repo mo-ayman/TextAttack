@@ -11,7 +11,7 @@ import torch
 from transformers import AutoModelForMaskedLM, AutoTokenizer
 
 from textattack.shared import utils
-
+from textattack.constraints.semantics import WordEmbeddingDistance
 from .word_swap import WordSwap
 
 
@@ -59,6 +59,7 @@ class WordSwapMaskedLM(WordSwap):
         max_candidates=50,
         min_confidence=5e-4,
         batch_size=16,
+        word_embedding_distance=WordEmbeddingDistance(),
         **kwargs,
     ):
         super().__init__(**kwargs)
@@ -68,6 +69,7 @@ class WordSwapMaskedLM(WordSwap):
         self.max_candidates = max_candidates
         self.min_confidence = min_confidence
         self.batch_size = batch_size
+        self.word_embedding_distance = word_embedding_distance
 
         if isinstance(masked_language_model, str):
             self._language_model = AutoModelForMaskedLM.from_pretrained(
@@ -249,6 +251,7 @@ class WordSwapMaskedLM(WordSwap):
             ]
             return top_replacements
 
+    
     def _get_transformations(self, current_text, indices_to_modify):
         indices_to_modify = list(indices_to_modify)
         if self.method == "bert-attack":
@@ -294,9 +297,10 @@ class WordSwapMaskedLM(WordSwap):
                         and re.search("[\u0600-\u06FF]", word)
                         and len(utils.words_from_text(word)) == 1
                     ):
-                        transformed_texts.append(
-                            current_text.replace_word_at_index(index_to_modify, word)
-                        )
+                        if self.word_embedding_distance.get_mse_dist(word_at_index, word) <= self.word_embedding_distance.max_mse_dist:
+                            transformed_texts.append(
+                                current_text.replace_word_at_index(index_to_modify, word)
+                            )
             return transformed_texts
         else:
             raise ValueError(f"Unrecognized value {self.method} for `self.method`.")
