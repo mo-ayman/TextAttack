@@ -59,7 +59,7 @@ class WordSwapMaskedLM(WordSwap):
         max_candidates=50,
         min_confidence=5e-4,
         batch_size=16,
-        word_embedding_distance=WordEmbeddingDistance(),
+        word_embedding_distance,
         **kwargs,
     ):
         super().__init__(**kwargs)
